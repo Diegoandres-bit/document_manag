@@ -1,0 +1,64 @@
+services:
+  # --------------------------------------------
+  backend-document-manag:
+    build:
+      context: ./document_management
+      dockerfile: Dockerfile
+    container_name: document-manag
+    depends_on:
+      mysql-document-manag:
+        condition: service_healthy
+    ports:
+      - "9020:8080"
+    networks:
+      - document-manag
+    environment:
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_REGION: ${AWS_REGION}
+      AWS_BUCKET_NAME: ${AWS_BUCKET_NAME}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # --------------------------------------------
+  mysql-document-manag:
+    build:
+      context: ./MySQL
+      dockerfile: Dockerfile
+    container_name: mysql-document-manag
+    volumes:
+      - ./MySQL/mysql_data:/var/lib/mysql
+    ports:
+      - "8012:3306"
+    networks:
+      - document-manag
+    environment:
+      MYSQL_ROOT_PASSWORD: sdgrh123*
+      MYSQL_USER: sdgrh
+      MYSQL_PASSWORD: sdgrh123*
+      MYSQL_DATABASE: document_db
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "sdgrh", "-psdgrh123*" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # --------------------------------------------
+  adminer-document-manag:
+    image: adminer
+    container_name: adminer-document-manag
+    depends_on:
+      - mysql-document-manag
+    ports:
+      - "9010:8080"
+    networks:
+      - document-manag
+
+# --------------------------------------------
+networks:
+  document-manag:
+    driver: bridge
+    name: document-manag
