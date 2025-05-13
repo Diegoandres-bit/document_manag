@@ -1,13 +1,17 @@
 package com.example.document_management.service;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
+import com.amazonaws.services.s3.model.S3Object;
+import java.nio.file.Paths;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.example.document_management.models.Document;
 import com.example.document_management.repo.DocumentRepository;
@@ -55,5 +59,17 @@ public class DocumentService {
             s3Repository.deleteFile(document.getS3Path());
             documentRepository.deleteById(documentId);
         }
+    }
+   
+
+    public S3Object getDocument(Long documentId) throws IOException {
+        Document document = documentRepository.findById(documentId)
+            .orElseThrow(() -> new FileNotFoundException("Documento no encontrado con ID: " + documentId));
+    
+        return s3Repository.downloadFile(document.getS3Path());
+    }
+    public Document getDocumentMetadata(Long documentId) throws IOException {
+        return documentRepository.findById(documentId)
+            .orElseThrow(() -> new FileNotFoundException("Documento no encontrado con ID: " + documentId));
     }
 }

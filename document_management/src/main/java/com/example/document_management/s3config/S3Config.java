@@ -22,10 +22,6 @@ public class S3Config {
 
     @Bean
     public AmazonS3 s3Client() {
-        System.out.println("✅ Bean s3Client creado con region: " + region);
-        System.out.println("✅ Bean s3Client creado con region: " + secretKey);
-        System.out.println("✅ Bean s3Client creado con region: " + accessKey);
-     
 
         if (accessKey == null || secretKey == null || region == null) {
             throw new IllegalArgumentException("Faltan variables AWS");
