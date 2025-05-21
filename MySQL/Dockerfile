@@ -1,0 +1,10 @@
+FROM mysql:8.0
+
+# Variables de entorno para MySQL
+ENV MYSQL_ROOT_PASSWORD=root123*
+ENV MYSQL_DATABASE=SDGRH
+ENV MYSQL_USER=sdgrh
+ENV MYSQL_PASSWORD=sdgrh123*
+
+# Exponer el puerto de MySQL
+EXPOSE 3306
