@@ -13,12 +13,23 @@ import com.example.document_management.repo.DocumentTypeRepository;
 public class DocumentTypeService {
     
     @Autowired
-    private DocumentTypeRepository documentTypeRepository;
+    private DocumentTypeRepository documentTypeRepository;  // Repository for DocumentType entities
 
+    /**
+     * Finds a DocumentType entity by its ID.
+     * 
+     * @param id the ID of the document type to find
+     * @return Optional containing the DocumentType if found, empty otherwise
+     */
     public Optional<DocumentType> findDocumentTypeById(Long id) {
         return documentTypeRepository.findById(id);
     }
-     
+    
+    /**
+     * Retrieves all DocumentType entities from the database.
+     * 
+     * @return a List of all DocumentType objects
+     */
     public List<DocumentType> getAllDocumentTypes() {
         return documentTypeRepository.findAll();
     }
